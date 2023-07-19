@@ -1,0 +1,25 @@
+---
+  - name: win_directory and  module demo
+    hosts: windows
+    become: false
+    gather_facts: false
+    tasks:
+      - name: Create a folder if not exist
+        win_file:
+          path: C:\Temp
+          state: directory
+
+      - name: Remove a file, if present
+        win_file:
+          path: C:\Temp\foo.conf
+          state: absent
+
+      - name: Create directory structure
+        win_file:
+          path: C:\Temp\folder\subfolder
+          state: directory
+
+      - name: Remove directory structure
+        win_file:
+          path: C:\Temp
+          state: absent

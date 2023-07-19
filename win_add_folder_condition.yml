@@ -1,0 +1,31 @@
+---
+  - name: win_directory and  module demo
+    hosts: windows
+    become: false
+    gather_facts: false
+    tasks:
+      - name: check if the folder exist
+        win_stat:
+          path: C:\Temp
+        register: folderexist
+     
+      - name: Display Content
+        debug:
+          msg: "{{ folderexist.stdout_lines }}"
+ 
+      - name: create if folder no exist
+        win_file:
+          path: C:\Temp
+          state: directory
+        when: not folderexist.stat.exists
+
+      - name: Remove a file, if present
+        win_file:
+          path: C:\Temp\foo.conf
+          state: absent
+
+      - name: Create directory structure
+        win_file:
+          path: C:\Temp\folder\subfolder
+          state: directory
+
