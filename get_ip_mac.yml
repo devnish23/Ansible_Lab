@@ -1,0 +1,30 @@
+---
+- name: Get IP and MAC Addresses
+  hosts: all 
+  gather_facts: yes
+
+  tasks:
+  block: 
+    - name: Display IP and MAC Addresses
+      debug:
+        msg: "Host: {{ ansible_hostname }} | IP: {{ ansible_default_ipv4.address }} | MAC: {{ ansible_default_ipv4.macaddress }}"
+
+    - name: print using shell module
+      shell: |
+        hostname=`uname -n`
+        printf '%10s %10s %25s %25s\n' hostname interface ipaddress macaddress
+        printf '%s\n' '----------------------------------------------------------------------------'
+        for each in $(ip address | grep -oP '(^[\d]+:\s)\K[\d\w]+'); do
+        mac=$(ip address show ${each} | grep -oP '(?<=link/ether\s)\K[\da-f:]+|(?<=link/loopback\s)\K[\da-f:]+')
+        for address in $(ip address show ${each} | grep -oP '(?<=inet\s)\K[\d.]+|(?<=inet6\s)\K[\da-f:]+'); do
+        printf '%10s %10s %25s %25s\n' $hostname ${each} ${address} ${mac}
+        done
+        done
+      register: command_output
+  tags: always
+ 
+    - name: Display Command Output 
+      debug:
+        msg: "{{ items }}"
+      loop: "{{ command_output.stdout_lines }}"
+      when: command_output is defined and command_output.stdout_lines | length > 0 
