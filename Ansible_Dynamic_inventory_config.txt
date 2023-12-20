@@ -1966,8 +1966,8 @@ stack_filters = False
 # Unlike the boto and AWS configure files, this section does not support
 # profiles.
 #
-aws_access_key_id = AKIAQ4UK7J35ECH4POB7
-aws_secret_access_key = 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
+aws_access_key_id = need to add
+aws_secret_access_key = need to add
 #aws_security_token = XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 [root@ansiblecontrol ansible]#
 
